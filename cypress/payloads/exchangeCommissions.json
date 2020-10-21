@@ -1,0 +1,17 @@
+{
+  "transactionType": 11,
+  "strategy": 1,
+  "payerPart": 0,
+  "source": 1,
+  "value": {
+    "EUR": [
+      1,
+      10
+    ]
+  },
+  "currency": "",
+  "userPart": 100,
+  "paymentMethodIdentifier": 449,
+  "midIdentifier": 1010,
+  "userIdentifier": "45880"
+}

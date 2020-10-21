@@ -1,0 +1,11 @@
+{
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjQ1ODgwIiwiYWNjZXNzVG9rZW4iOiJlY2Y5MmFjNWQ2N2QxMjQ4MjZmODJlODUiLCJ0aW1lIjoxNjAyNjk3NTU3LCJ3YWxsZXRJZCI6IjM4MDMyIiwicm9sZXMiOltdLCJ0d29GYWN0b3IiOnsicGFzc2VkIjp0cnVlfX0.iQnu8bPNpxY8fSazCVSkpXOyefdNpn86i9b6Cn0ty4w",
+  "personal_account": "1811",
+  "personal_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE4MTEiLCJhY2Nlc3NUb2tlbiI6IjY0YjE2NGUxOTMyMzA0ODFjNmZlY2VmYiIsInRva2VuSWQiOm51bGwsIndhbGxldElkIjoiMTgwNSIsInRpbWUiOjE1OTcxMjU5NjQsImV4cGlyZWRBdCI6bnVsbCwicm9sZXMiOltdLCJ0d29GYWN0b3IiOnsicGFzc2VkIjp0cnVlfX0.5qfuOiRo5jcLgH1Iz-hE5McHJui3jbM7qaNU5f_b9Ak",
+  "bussiness_account": "45880",
+  "bussiness_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE4MTIiLCJhY2Nlc3NUb2tlbiI6IjY0YjE2NGUxOTMyMzA0ODFjNmZlY2VmYiIsInRva2VuSWQiOm51bGwsIndhbGxldElkIjoiMTgwNiIsInRpbWUiOjE1OTcxMjU5NjQsImV4cGlyZWRBdCI6bnVsbCwicm9sZXMiOltdLCJ0d29GYWN0b3IiOnsicGFzc2VkIjp0cnVlfX0.Wf_90Kna5dLKjlaBWSGzfghcGYaTh-5KHu-IYOaCpR8",
+  "email": "dmitri.s+merchd@payop.com",
+  "project_name": "AutomationTestProject (please do not change or delete)",
+  "project_ID": "36bf5c6f-1162-48d0-8b6b-757f12426179",
+  "main_currency": "RUB"
+}

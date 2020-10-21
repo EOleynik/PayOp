@@ -1,0 +1,7 @@
+{
+  "baseUrl": "https://app.stage.payop.com",
+  "viewportHeight": 1080,
+  "viewportWidth": 1920,
+  "waitForAnimations" : true,
+  "chromeWebSecurity" : false
+}
