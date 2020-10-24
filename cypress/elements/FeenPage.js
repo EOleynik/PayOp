@@ -61,10 +61,8 @@ class FeenPage {
         })
     }
 
-    setExchangeCommissionAndStrategy(strategy, merchantCommissionsPart){
+    setExchangeCommissionAndStrategy(strategy){
         exchangeCommissions.strategy = strategy;
-        exchangeCommissions.userPart = merchantCommissionsPart;
-        exchangeCommissions.payerPart = 100 - merchantCommissionsPart;
         cy.request({
             method: 'POST',
             url: `https://app.stage.payop.com/v1/instrument-settings/commissions`,

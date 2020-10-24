@@ -3,5 +3,6 @@
   "viewportHeight": 1080,
   "viewportWidth": 1920,
   "waitForAnimations" : true,
-  "chromeWebSecurity" : false
+  "chromeWebSecurity" : false,
+  "pageLoadTimeout": 120000
 }

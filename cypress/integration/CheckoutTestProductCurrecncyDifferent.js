@@ -40,7 +40,7 @@ function fillCheckoutDataAndPay() {
     paymentPage.getInputCVC().type(card.CVC);
     paymentPage.getInputCartdholderName().type(card.cardholder);
     paymentPage.getButtonPay().click();
-    cy.wait(6000);
+    cy.wait(5000);
 }
 
 function checkTransactionMath(payAmount) {
@@ -51,7 +51,7 @@ function checkTransactionMath(payAmount) {
     math.checkStrategyMathRUB(payAmount);
 }
 
-describe('All currencies are same.', () => {
+describe('Pay currency VND. Main currency RUB', () => {
 
     beforeEach('', () => {
         loginPage.visit();
@@ -62,13 +62,11 @@ describe('All currencies are same.', () => {
         loginPage.getToAdminPanelButton().click();
     });
 
-    // 1.1 Цена товара совпадает с валютами которые в кабинете мерчанта (USD, EUR, GBP, RUB)
-    // и валютами провайдера. Цена товара - 500 RUB, основная валюта мерчанта - RUB, валюта оплаты - RUB.
-    // Стратегия комиссии - ALL. Разбивка 100/0 - OK
-    it('Checkout, product currency RUB, strategy ALL, 100/0', () => {
+    it.only('Checkout, product currency RUB, pay currency VND, strategy ALL, 100/0', () => {
 
-        let payAmount = cy.getRandomArbitrary(300, 500);
-        let payCurrency = "RUB";
+        //let payAmount = cy.getRandomArbitrary(300, 500);
+        let payAmount = 500;
+        let payCurrency = "VND";
         setStartupSettings(payCurrency, 1, 1, 0);
         homePage.getMenuProjects().click();
         homePage.getSubMenuRest().click();
@@ -77,13 +75,11 @@ describe('All currencies are same.', () => {
         checkTransactionMath(payAmount);
     });
 
-    // 1.2 Цена товара совпадает с валютами которые в кабинете мерчанта (USD, EUR, GBP, RUB)
-    // и валютами провайдера. Цена товара - 500 RUB, основная валюта мерчанта - RUB, валюта оплаты - RUB.
-    // Стратегия комиссии - ALL. Разбивка 50/50 - OK
-    it('Checkout, product currency RUB, strategy ALL, 50/50', () => {
+    it('Checkout, product currency RUB, pay currency VND, strategy ALL, 50/50', () => {
 
-        let payAmount = cy.getRandomArbitrary(300, 500);
-        let payCurrency = "RUB";
+        //let payAmount = cy.getRandomArbitrary(300, 500);
+        let payAmount = 500;
+        let payCurrency = "VND";
         setStartupSettings(payCurrency, 1, 1, 50);
         homePage.getMenuProjects().click();
         homePage.getSubMenuRest().click();
@@ -92,13 +88,11 @@ describe('All currencies are same.', () => {
         checkTransactionMath(payAmount);
     });
 
-    // 1.3 Цена товара совпадает с валютами которые в кабинете мерчанта (USD, EUR, GBP, RUB)
-    // и валютами провайдера. Цена товара - 500 RUB, основная валюта мерчанта - RUB, валюта оплаты - RUB.
-    // Стратегия комиссии - ALL. Разбивка 0/100 - OK
-    it('Checkout, product currency RUB, strategy ALL, 0/100', () => {
+    it('Checkout, product currency RUB, pay currency VND, strategy ALL, 0/100', () => {
 
-        let payAmount = cy.getRandomArbitrary(300, 500);
-        let payCurrency = "RUB";
+        //let payAmount = cy.getRandomArbitrary(300, 500);
+        let payAmount = 500;
+        let payCurrency = "VND";
         setStartupSettings(payCurrency, 1, 1, 100);
         homePage.getMenuProjects().click();
         homePage.getSubMenuRest().click();
@@ -107,13 +101,11 @@ describe('All currencies are same.', () => {
         checkTransactionMath(payAmount);
     });
 
-    // 2.1 Цена товара совпадает с валютами которые в кабинете мерчанта (USD, EUR, GBP, RUB)
-    // и валютами провайдера. Цена товара - 500 RUB, основная валюта мерчанта - RUB, валюта оплаты - RUB.
-    // Стратегия комиссии - MAX. Разбивка 100/0 - OK
-    it('Checkout, product currency RUB, strategy MAX, 100/0', () => {
+    it('Checkout, product currency RUB, pay currency VND, strategy MAX, 100/0', () => {
 
-        let payAmount = cy.getRandomArbitrary(300, 500);
-        let payCurrency = "RUB";
+        //let payAmount = cy.getRandomArbitrary(300, 500);
+        let payAmount = 500;
+        let payCurrency = "VND";
         setStartupSettings(payCurrency, 2, 1, 0);
         homePage.getMenuProjects().click();
         homePage.getSubMenuRest().click();
@@ -122,13 +114,12 @@ describe('All currencies are same.', () => {
         checkTransactionMath(payAmount);
     });
 
-    // 2.2 Цена товара совпадает с валютами которые в кабинете мерчанта (USD, EUR, GBP, RUB)
-    // и валютами провайдера. Цена товара - 500 RUB, основная валюта мерчанта - RUB, валюта оплаты - RUB.
-    // Стратегия комиссии - MAX. Разбивка 100/0 - OK
-    it('Checkout, product currency RUB, strategy MAX, 50/50', () => {
 
-        let payAmount = cy.getRandomArbitrary(300, 500);
-        let payCurrency = "RUB";
+    it('Checkout, product currency RUB, pay currency VND, strategy MAX, 50/50', () => {
+
+        //let payAmount = cy.getRandomArbitrary(300, 500);
+        let payAmount = 500;
+        let payCurrency = "VND";
         setStartupSettings(payCurrency, 2, 1, 50);
         homePage.getMenuProjects().click();
         homePage.getSubMenuRest().click();
@@ -136,14 +127,11 @@ describe('All currencies are same.', () => {
         fillCheckoutDataAndPay();
         checkTransactionMath(payAmount);
     });
+    it('Checkout, product currency RUB, pay currency VND, strategy MAX, 0/100', () => {
 
-    // 2.3 Цена товара совпадает с валютами которые в кабинете мерчанта (USD, EUR, GBP, RUB)
-    // и валютами провайдера. Цена товара - 500 RUB, основная валюта мерчанта - RUB, валюта оплаты - RUB.
-    // Стратегия комиссии - MAX. Разбивка 100/0 - OK
-    it('Checkout, product currency RUB, strategy MAX, 0/100', () => {
-
-        let payAmount = cy.getRandomArbitrary(300, 500);
-        let payCurrency = "RUB";
+        //let payAmount = cy.getRandomArbitrary(300, 500);
+        let payAmount = 500;
+        let payCurrency = "VND";
         setStartupSettings(payCurrency, 2, 1, 100);
         homePage.getMenuProjects().click();
         homePage.getSubMenuRest().click();
