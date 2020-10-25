@@ -4,7 +4,6 @@ import homePage from "../elements/HomePage";
 import restPage from "../elements/RestPage";
 import paymentPage from "../elements/PaymentPage";
 import card from "../fixtures/card";
-import transactionsPage from "../elements/TransactionsPage";
 import paymentMethodPage from "../elements/PaymentMethodPage";
 import math from '../helpers/MathCheckoutAllCurrenciesSame.js';
 
@@ -12,12 +11,12 @@ cy.getRandomArbitrary = function getRandomArbitrary(min, max) {
     return (Math.random() * (max - min) + min).toFixed(2);
 };
 
-function setStartupSettings(payCurrency, checkoutStrategy, exchangeStrategy, payerCommissionsPart) {
+function setStartupSettings(payCurrency, checkoutStrategy, exchangeStrategy, payerCommissionsPart, mainCurrencyName, mainCurrencyFixCommission, mainCurrencyPercentCommission, productCurrencyName, productCurrencyFixCommission, productCurrencyPercentCommission, payerExchangeCommissionsPart) {
     homePage.setMainCurrency(payCurrency);
     feenPage.enablePaymentMethodGroup();
     feenPage.enablePaymentMethod();
     feenPage.setCheckoutCommissionAndStrategy(checkoutStrategy);
-    feenPage.setExchangeCommissionAndStrategy(exchangeStrategy);
+    feenPage.setExchangeCommissionAndStrategy(exchangeStrategy, mainCurrencyName, mainCurrencyFixCommission, mainCurrencyPercentCommission, productCurrencyName, productCurrencyFixCommission, productCurrencyPercentCommission, payerExchangeCommissionsPart);
     paymentMethodPage.setCheckoutCommissionBreakDown(payerCommissionsPart);
 }
 
@@ -38,7 +37,7 @@ function fillCheckoutDataAndPay() {
     paymentPage.getInputCardNumber().type(card.card_number);
     paymentPage.getInputExpirationDate().type(card.expiration_date);
     paymentPage.getInputCVC().type(card.CVC);
-    paymentPage.getInputCartdholderName().type(card.cardholder);
+    paymentPage.getInputCardholderName().type(card.cardholder);
     paymentPage.getButtonPay().click();
     cy.wait(6000);
 }
@@ -69,7 +68,7 @@ describe('All currencies are same.', () => {
 
         let payAmount = cy.getRandomArbitrary(300, 500);
         let payCurrency = "RUB";
-        setStartupSettings(payCurrency, 1, 1, 0);
+        setStartupSettings(payCurrency, 1, 1, 0, 'RUB', 10, 10, 'RUB', 10, 10, 0);
         homePage.getMenuProjects().click();
         homePage.getSubMenuRest().click();
         fillTransactionData(payAmount, payCurrency);
@@ -84,7 +83,7 @@ describe('All currencies are same.', () => {
 
         let payAmount = cy.getRandomArbitrary(300, 500);
         let payCurrency = "RUB";
-        setStartupSettings(payCurrency, 1, 1, 50);
+        setStartupSettings(payCurrency, 1, 1, 50, 'RUB', 10, 10, 'RUB', 10, 10, 0);
         homePage.getMenuProjects().click();
         homePage.getSubMenuRest().click();
         fillTransactionData(payAmount, payCurrency);
@@ -99,7 +98,7 @@ describe('All currencies are same.', () => {
 
         let payAmount = cy.getRandomArbitrary(300, 500);
         let payCurrency = "RUB";
-        setStartupSettings(payCurrency, 1, 1, 100);
+        setStartupSettings(payCurrency, 1, 1, 100, 'RUB', 10, 10, 'RUB', 10, 10, 0);
         homePage.getMenuProjects().click();
         homePage.getSubMenuRest().click();
         fillTransactionData(payAmount, payCurrency);
@@ -114,7 +113,7 @@ describe('All currencies are same.', () => {
 
         let payAmount = cy.getRandomArbitrary(300, 500);
         let payCurrency = "RUB";
-        setStartupSettings(payCurrency, 2, 1, 0);
+        setStartupSettings(payCurrency, 2, 1, 0, 'RUB', 10, 10, 'RUB', 10, 10, 0);
         homePage.getMenuProjects().click();
         homePage.getSubMenuRest().click();
         fillTransactionData(payAmount, payCurrency);
@@ -129,7 +128,7 @@ describe('All currencies are same.', () => {
 
         let payAmount = cy.getRandomArbitrary(300, 500);
         let payCurrency = "RUB";
-        setStartupSettings(payCurrency, 2, 1, 50);
+        setStartupSettings(payCurrency, 2, 1, 50, 'RUB', 10, 10, 'RUB', 10, 10, 0);
         homePage.getMenuProjects().click();
         homePage.getSubMenuRest().click();
         fillTransactionData(payAmount, payCurrency);
@@ -144,7 +143,7 @@ describe('All currencies are same.', () => {
 
         let payAmount = cy.getRandomArbitrary(300, 500);
         let payCurrency = "RUB";
-        setStartupSettings(payCurrency, 2, 1, 100);
+        setStartupSettings(payCurrency, 2, 1, 100, 'RUB', 10, 10, 'RUB', 10, 10, 0);
         homePage.getMenuProjects().click();
         homePage.getSubMenuRest().click();
         fillTransactionData(payAmount, payCurrency);

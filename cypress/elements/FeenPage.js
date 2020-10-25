@@ -61,8 +61,16 @@ class FeenPage {
         })
     }
 
-    setExchangeCommissionAndStrategy(strategy){
+    setExchangeCommissionAndStrategy(strategy, mainCurrencyName, mainCurrencyFixCommission, mainCurrencyPercentCommission, productCurrencyName, productCurrencyFixCommission, productCurrencyPercentCommission, payerExchangePart){
+        let merchantExchangePart = 100 - payerExchangePart;
         exchangeCommissions.strategy = strategy;
+        exchangeCommissions.payerPart = payerExchangePart;
+        exchangeCommissions.userPart = +merchantExchangePart;
+        exchangeCommissions.value[mainCurrencyName][0] = mainCurrencyFixCommission;
+        exchangeCommissions.value[mainCurrencyName][1] = mainCurrencyPercentCommission;
+        exchangeCommissions.value[productCurrencyName][0] = productCurrencyFixCommission;
+        exchangeCommissions.value[productCurrencyName][1] = productCurrencyPercentCommission;
+
         cy.request({
             method: 'POST',
             url: `https://app.stage.payop.com/v1/instrument-settings/commissions`,

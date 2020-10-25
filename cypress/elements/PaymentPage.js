@@ -11,28 +11,28 @@ class PaymentPage{
         return cy.get('[class="mat-focus-indicator confirm-wrap__button mat-raised-button mat-button-base mat-primary"]').first();
     }
     getInputCardNumber() {
-        return cy.get('#mat-input-15');
+        return cy.get('[formcontrolname="pan"]');
     }
 
     getInputExpirationDate() {
-        return cy.get('#mat-input-16');
+        return cy.get('[formcontrolname="expirationDate"]');
     }
 
     getInputCVC() {
-        return cy.get('#mat-input-17');
+        return cy.get('[formcontrolname="cvv"]');
     }
 
-    getInputCartdholderName() {
-        return cy.get('#mat-input-18');
+    getInputCardholderName() {
+        return cy.get('[formcontrolname="holderName"]');
     }
 
     getButtonPay() {
         return cy.get('[class="mat-focus-indicator confirm-wrap__button mat-raised-button mat-button-base mat-primary"]');
     }
 
-    selectPayCurrency() {
-         cy.contains('span', merchant.main_currency).click();
-       return cy.contains ('span', checkout.pay_currency).click();
+    selectPayCurrency(payCurrency) {
+         cy.get('#mat-select-8').click();
+       return cy.contains ('span', payCurrency).click();
     }
 }
 
