@@ -43,7 +43,7 @@ class MathCheckout {
 
                 //TODO: change locator and status when it will be fixed on staging.
                 cy.get(':nth-child(1) > .cdk-column-state > .mat-chip').invoke('text').should((text) => {
-                    expect(text).to.eq(' Неудачный ')
+                    expect(text.replace(/\s/g, '')).to.eq('Неудачный')
                 });
 
                 cy.log("Strategy "+strategy)
@@ -79,12 +79,22 @@ function strategyAll(payAmount, fixedCommission, percentCommission, strategy, pa
     if (payerPart == 100){
         cy.log("Стратегия All, разбивка 0/100")
 
-        let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixVND, exchangePercentVND).toFixed(2);
-        let resultBeforeExchange = (+payAmount - +exchangeExternalResult).toFixed(2);
-        let resultAfterExchange = (currenciesExchanger('VND', 'RUB', resultBeforeExchange) - exchangeInternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixRUB, exchangePercentRUB)).toFixed(2);
+        cy.log("rate =" + " " + rate);
+        cy.log("payAmount =" + " " + payAmount);
+        cy.log("fixedCommission =" + " " + fixedCommission);
+        cy.log("percentCommission =" + " " + percentCommission);
+        cy.log("strategy =" + " " + strategy);
+        cy.log("payerPart =" + " " + payerPart);
+        cy.log("userPart =" + " " + userPart);
+        cy.log("rezult =" + " " + rezult);
+
+        let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixVND, exchangePercentVND);
+        let resultAfterExchange = (+payAmount - +exchangeExternalResult) * rate;
+        let exchangeInternalCurrent = exchangeInternal(resultAfterExchange, exchangeStrategy, exchangePayerPart, exchangeFixRUB, exchangePercentRUB);
+        let resultFinal = (resultAfterExchange - exchangeInternalCurrent).toFixed(2);
 
         cy.get('[class="bold price-align"]').eq(0).invoke('text').should((text) => {
-            expect(text).to.eq((+payAmount).toFixed(2) + ' ' + 'RUB')
+            expect(text.replace(/\s/g, '')).to.eq((+resultFinal).toFixed(2) + 'RUB')
         })
     }
     else if (payerPart == 0) {
@@ -92,6 +102,7 @@ function strategyAll(payAmount, fixedCommission, percentCommission, strategy, pa
 
         let rezult = (+payAmount - +commissionsSum);
 
+        cy.log("rate =" + " " + rate);
         cy.log("payAmount =" + " " + payAmount);
         cy.log("fixedCommission =" + " " + fixedCommission);
         cy.log("percentCommission =" + " " + percentCommission);
@@ -111,7 +122,7 @@ function strategyAll(payAmount, fixedCommission, percentCommission, strategy, pa
         cy.log("resultAfterExchange =" + " " + resultAfterExchange);
 
             cy.get('[class="bold price-align"]').eq(0).invoke('text').should((text) => {
-                expect(text).to.eq((+resultFinal).toFixed(2) + ' ' + 'RUB')
+                expect(text.replace(/\s/g, '')).to.eq((+resultFinal).toFixed(2) + 'RUB')
             })
 
     }
@@ -122,6 +133,8 @@ function strategyAll(payAmount, fixedCommission, percentCommission, strategy, pa
 
         let rezult = (+payAmount - +commissionWithoutPayerPart).toFixed(2);
 
+
+        cy.log("rate =" + " " + rate);
         cy.log("payAmount =" + " " + payAmount);
         cy.log("fixedCommission =" + " " + fixedCommission);
         cy.log("percentCommission =" + " " + percentCommission);
@@ -130,8 +143,13 @@ function strategyAll(payAmount, fixedCommission, percentCommission, strategy, pa
         cy.log("userPart =" + " " + userPart);
         cy.log("rezult =" + " " + rezult);
 
+        let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixVND, exchangePercentVND);
+        let resultAfterExchange = (+rezult - +exchangeExternalResult) * rate;
+        let exchangeInternalCurrent = exchangeInternal(resultAfterExchange, exchangeStrategy, exchangePayerPart, exchangeFixRUB, exchangePercentRUB);
+        let resultFinal = (resultAfterExchange - exchangeInternalCurrent).toFixed(2);
+
             cy.get('[class="bold price-align"]').eq(0).invoke('text').should((text) => {
-                expect(text).to.eq((+rezult).toFixed(2) + ' ' + 'RUB')
+                expect(text.replace(/\s/g, '')).to.eq((+resultFinal).toFixed(2) + 'RUB')
             })
     }else{
         cy.log("Стратегия All, разбивка не в рамках кейсов");
@@ -146,6 +164,7 @@ function strategyMax(payAmount, fixedCommission, percentCommission, strategy, pa
 
             let rezult = (+payAmount - +fixedCommission).toFixed(2);
 
+            cy.log("rate =" + " " + rate);
             cy.log("payAmount =" + " " + payAmount);
             cy.log("fixedCommission =" + " " + fixedCommission);
             cy.log("percentCommission =" + " " + percentCommission);
@@ -153,16 +172,27 @@ function strategyMax(payAmount, fixedCommission, percentCommission, strategy, pa
             cy.log("payerPart =" + " " + payerPart);
             cy.log("userPart =" + " " + userPart);
             cy.log("rezult =" + " " + rezult);
-
-            cy.get('[class="bold price-align"]').eq(0).invoke('text').should((text) => {
-                expect(text).to.eq((+rezult).toFixed(2) + ' ' + 'RUB')
-            })
+    
+            let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixVND, exchangePercentVND);
+            let resultAfterExchange = (+rezult - +exchangeExternalResult) * rate;
+            let exchangeInternalCurrent = exchangeInternal(resultAfterExchange, exchangeStrategy, exchangePayerPart, exchangeFixRUB, exchangePercentRUB);
+            let resultFinal = (resultAfterExchange - exchangeInternalCurrent).toFixed(2);
+    
+            cy.log("exchangeInternalCurrent =" + " " + exchangeInternalCurrent);
+    
+            cy.log("exchangeExternalResult =" + " " + exchangeExternalResult);
+            cy.log("resultAfterExchange =" + " " + resultAfterExchange);
+    
+                cy.get('[class="bold price-align"]').eq(0).invoke('text').should((text) => {
+                    expect(text.replace(/\s/g, '')).to.eq((+resultFinal).toFixed(2) + 'RUB')
+                })
         }
         else {
             cy.wait(5000);
 
             let rezult = (payAmount - (+payAmount / 100 * +percentCommission)).toFixed(2);
 
+            cy.log("rate =" + " " + rate);
             cy.log("payAmount =" + " " + payAmount);
             cy.log("fixedCommission =" + " " + fixedCommission);
             cy.log("percentCommission =" + " " + percentCommission);
@@ -170,19 +200,39 @@ function strategyMax(payAmount, fixedCommission, percentCommission, strategy, pa
             cy.log("payerPart =" + " " + payerPart);
             cy.log("userPart =" + " " + userPart);
             cy.log("rezult =" + " " + rezult);
-            cy.log("итог комиссии =" + " " + (+payAmount / 100 * +percentCommission).toFixed(2));
-
-            cy.get('[class="bold price-align"]').eq(0).invoke('text').should((text) => {
-                expect(text).to.eq((+rezult).toFixed(2) + ' ' + 'RUB')
-            })
+    
+            let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixVND, exchangePercentVND);
+            let resultAfterExchange = (+rezult - +exchangeExternalResult) * rate;
+            let exchangeInternalCurrent = exchangeInternal(resultAfterExchange, exchangeStrategy, exchangePayerPart, exchangeFixRUB, exchangePercentRUB);
+            let resultFinal = (resultAfterExchange - exchangeInternalCurrent).toFixed(2);
+    
+            cy.log("exchangeInternalCurrent =" + " " + exchangeInternalCurrent);
+    
+            cy.log("exchangeExternalResult =" + " " + exchangeExternalResult);
+            cy.log("resultAfterExchange =" + " " + resultAfterExchange);
+    
+                cy.get('[class="bold price-align"]').eq(0).invoke('text').should((text) => {
+                    expect(text.replace(/\s/g, '')).to.eq((+resultFinal).toFixed(2) + 'RUB')
+                })
         }
     }else if (payerPart == 100) {
         cy.wait(5000);
+        cy.log("rate =" + " " + rate);
+        cy.log("payAmount =" + " " + payAmount);
+        cy.log("fixedCommission =" + " " + fixedCommission);
+        cy.log("percentCommission =" + " " + percentCommission);
+        cy.log("strategy =" + " " + strategy);
+        cy.log("payerPart =" + " " + payerPart);
+        cy.log("userPart =" + " " + userPart);
+        cy.log("rezult =" + " " + rezult);
 
-        cy.log("ну тут точно чётко должно быть");
+        let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixVND, exchangePercentVND);
+        let resultAfterExchange = (+payAmount - +exchangeExternalResult) * rate;
+        let exchangeInternalCurrent = exchangeInternal(resultAfterExchange, exchangeStrategy, exchangePayerPart, exchangeFixRUB, exchangePercentRUB);
+        let resultFinal = (resultAfterExchange - exchangeInternalCurrent).toFixed(2);
 
         cy.get('[class="bold price-align"]').eq(0).invoke('text').should((text) => {
-            expect(text).to.eq((+payAmount).toFixed(2) + ' ' + 'RUB')
+            expect(text.replace(/\s/g, '')).to.eq((+resultFinal).toFixed(2) + 'RUB')
         })
     } else if (payerPart == 50) {
         if (fixedCommission > (+payAmount / 100 * +percentCommission)) {
@@ -195,6 +245,7 @@ function strategyMax(payAmount, fixedCommission, percentCommission, strategy, pa
 
             let rezult = (+payAmount - +halfCommision).toFixed(2);
 
+            cy.log("rate =" + " " + rate);
             cy.log("payAmount =" + " " + payAmount);
             cy.log("fixedCommission =" + " " + fixedCommission);
             cy.log("percentCommission =" + " " + percentCommission);
@@ -202,10 +253,15 @@ function strategyMax(payAmount, fixedCommission, percentCommission, strategy, pa
             cy.log("payerPart =" + " " + payerPart);
             cy.log("userPart =" + " " + userPart);
             cy.log("rezult =" + " " + rezult);
-
-            cy.get('[class="bold price-align"]').eq(0).invoke('text').should((text) => {
-                expect(text).to.eq((+rezult).toFixed(2) + ' ' + 'RUB')
-            })
+    
+            let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixVND, exchangePercentVND);
+            let resultAfterExchange = (+rezult - +exchangeExternalResult) * rate;
+            let exchangeInternalCurrent = exchangeInternal(resultAfterExchange, exchangeStrategy, exchangePayerPart, exchangeFixRUB, exchangePercentRUB);
+            let resultFinal = (resultAfterExchange - exchangeInternalCurrent).toFixed(2);
+    
+                cy.get('[class="bold price-align"]').eq(0).invoke('text').should((text) => {
+                    expect(text.replace(/\s/g, '')).to.eq((+resultFinal).toFixed(2) + 'RUB')
+                })
         }
         else {
             cy.wait(5000);
@@ -217,6 +273,7 @@ function strategyMax(payAmount, fixedCommission, percentCommission, strategy, pa
 
             let rezult = (+payAmount - +halfCommision).toFixed(2);
 
+            cy.log("rate =" + " " + rate);
             cy.log("payAmount =" + " " + payAmount);
             cy.log("fixedCommission =" + " " + fixedCommission);
             cy.log("percentCommission =" + " " + percentCommission);
@@ -224,14 +281,18 @@ function strategyMax(payAmount, fixedCommission, percentCommission, strategy, pa
             cy.log("payerPart =" + " " + payerPart);
             cy.log("userPart =" + " " + userPart);
             cy.log("rezult =" + " " + rezult);
-            cy.log("итог комиссии =" + " " + (+payAmount / 100 * +percentCommission).toFixed(2));
+    
+            let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixVND, exchangePercentVND);
+            let resultAfterExchange = (+rezult - +exchangeExternalResult) * rate;
+            let exchangeInternalCurrent = exchangeInternal(resultAfterExchange, exchangeStrategy, exchangePayerPart, exchangeFixRUB, exchangePercentRUB);
+            let resultFinal = (resultAfterExchange - exchangeInternalCurrent).toFixed(2);
 
             cy.get('[class="bold price-align"]').eq(0).invoke('text').should((text) => {
-                expect(text).to.eq((+rezult).toFixed(2) + ' ' + 'RUB')
+                expect(text.replace(/\s/g, '')).to.eq((+resultFinal).toFixed(2) + 'RUB')
             })
         }
 }else{
-    cy.log("Стратегия All, разбивка не в рамках кейсов");
+    cy.log("Стратегия MAX, разбивка не в рамках кейсов");
 }
 }
 
