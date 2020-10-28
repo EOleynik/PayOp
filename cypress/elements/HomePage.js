@@ -23,6 +23,10 @@ class HomePage {
         return cy.contains('Verification');
     }
 
+    getMenuRefunds(){
+        return cy.contains('Возвраты');
+    }
+
     getChangeAccount() {
         cy.get('[class="acc-active__info_acc-type"]').click()
         return cy.contains('Personal account').click()

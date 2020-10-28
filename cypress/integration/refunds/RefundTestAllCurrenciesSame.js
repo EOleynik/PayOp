@@ -1,11 +1,11 @@
-import feenPage from "../elements/FeenPage";
-import loginPage from "../elements/LoginPage";
-import homePage from "../elements/HomePage";
-import restPage from "../elements/RestPage";
-import paymentPage from "../elements/PaymentPage";
+import feenPage from "../../elements/FeenPage";
+import loginPage from "../../elements/LoginPage";
+import homePage from "../../elements/HomePage";
+import restPage from "../../elements/RestPage";
+import paymentPage from "../../elements/PaymentPage";
 import card from "../fixtures/card";
-import paymentMethodPage from "../elements/PaymentMethodPage";
-import math from '../helpers/MathCheckoutAllCurrenciesSame.js';
+import paymentMethodPage from "../../elements/PaymentMethodPage";
+import math from '../../helpers/MathCheckoutAllCurrenciesSame.js';
 
 cy.getRandomArbitrary = function getRandomArbitrary(min, max) {
     return (Math.random() * (max - min) + min).toFixed(2);
@@ -48,6 +48,7 @@ function checkTransactionMath(payAmount) {
     loginPage.getToAdminPanelButton().click();
     homePage.getMenuPaymentHistory().click();
     math.checkStrategyMathRUB(payAmount);
+    homePage.
 }
 
 describe('All currencies are same.', () => {

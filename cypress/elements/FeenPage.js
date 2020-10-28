@@ -84,6 +84,21 @@ class FeenPage {
 
         })
     }
+
+    acceptRefund(transactionId){
+        cy.request({
+            method: 'POST',
+            url: `https://app.stage.payop.com/v1/instrument-settings/user-payment-settings/payment-methods/${transactionId}/enable`,
+            headers: {
+                token: feen.token,
+            },
+            body: {}
+        }).then((response) => {
+            expect(response).property('status').to.equal(201);
+            expect(response.body.status).eq(1);
+
+        })
+    }
 }
 
 export default new FeenPage();

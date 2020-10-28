@@ -26,7 +26,7 @@ class MathCheckout {
 
                 //TODO: change locator and status when it will be fixed on staging.
                 cy.get(':nth-child(1) > .cdk-column-state > .mat-chip').invoke('text').should((text) => {
-                    expect(text).to.eq(' Неудачный ')
+                    expect(text.replace(/\s/g, '')).to.eq('Принят')
                 });
 
                 cy.log("Strategy "+strategy)

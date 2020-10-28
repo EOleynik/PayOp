@@ -6,7 +6,7 @@ import paymentMethod from "../fixtures/paymentMethod.json"
 
 class MathCheckout {
 
-    checkStrategyMathVND(payAmount) {
+    checkStrategyMathKHR(payAmount) {
         cy.request({
             method: 'GET',
             url: `https://app.stage.payop.com/v1/instrument-settings/commissions/custom/${paymentMethod.id}/${merchant.project_ID}`,
@@ -16,16 +16,16 @@ class MathCheckout {
         }).then((response) => {
             expect(response).property('status').to.equal(200);
             expect(response.body).property('data').to.not.be.oneOf([null, ""]);
-                let fixedCommission = response.body.data[7].value.VND[0];
-                let percentCommission = response.body.data[7].value.VND[1];
+                let fixedCommission = response.body.data[7].value.KHR[0];
+                let percentCommission = response.body.data[7].value.KHR[1];
                 let strategy = response.body.data[7].strategy;
                 let payerPart = response.body.data[7].payerPart;
                 let userPart = response.body.data[7].userPart;
 
                 let exchangeFixRUB = response.body.data[2].value.RUB[0];
                 let exchangePercentRUB = response.body.data[2].value.RUB[1];
-                let exchangeFixVND = response.body.data[2].value.VND[0];
-                let exchangePercentVND = response.body.data[2].value.VND[1];
+                let exchangeFixKHR = response.body.data[2].value.KHR[0];
+                let exchangePercentKHR = response.body.data[2].value.KHR[1];
                 let exchangeStrategy = response.body.data[2].strategy;
                 let exchangePayerPart = response.body.data[2].payerPart;
                 let exchangeUserPart = response.body.data[2].userPart;
@@ -33,7 +33,7 @@ class MathCheckout {
                 let exchangeAmount = 1;
                 cy.request({
                     method: 'GET',
-                    url: `http://data.fixer.io/api/convert?access_key=f74d95af4d874be993c3d2b716800735&from=vnd&to=rub&amount=${exchangeAmount}`,
+                    url: `http://data.fixer.io/api/convert?access_key=f74d95af4d874be993c3d2b716800735&from=KHR&to=rub&amount=${exchangeAmount}`,
                 }).then((response) => {
                     expect(response).property('status').to.equal(200);
                     
@@ -43,16 +43,16 @@ class MathCheckout {
 
                 //TODO: change locator and status when it will be fixed on staging.
                 cy.get(':nth-child(1) > .cdk-column-state > .mat-chip').invoke('text').should((text) => {
-                    expect(text.replace(/\s/g, '')).to.eq('Неудачный')
+                    expect(text.replace(/\s/g, '')).to.eq('Принят')
                 });
 
                 cy.log("Strategy "+strategy)
                 cy.log("Exchange strategy"+exchangeStrategy)
 
                 if(strategy === 1){
-                    strategyAll(payAmount, fixedCommission, percentCommission, strategy, payerPart, userPart, rate, exchangeStrategy, exchangeFixRUB, exchangePercentRUB, exchangeFixVND, exchangePercentVND, exchangePayerPart, exchangeUserPart);
+                    strategyAll(payAmount, fixedCommission, percentCommission, strategy, payerPart, userPart, rate, exchangeStrategy, exchangeFixRUB, exchangePercentRUB, exchangeFixKHR, exchangePercentKHR, exchangePayerPart, exchangeUserPart);
                 } else {
-                    strategyMax(payAmount, fixedCommission, percentCommission, strategy, payerPart, userPart, rate, exchangeStrategy, exchangeFixRUB, exchangePercentRUB, exchangeFixVND, exchangePercentVND, exchangePayerPart, exchangeUserPart);
+                    strategyMax(payAmount, fixedCommission, percentCommission, strategy, payerPart, userPart, rate, exchangeStrategy, exchangeFixRUB, exchangePercentRUB, exchangeFixKHR, exchangePercentKHR, exchangePayerPart, exchangeUserPart);
                 }
     })})}
 
@@ -73,7 +73,7 @@ function currenciesExchanger (currencyFrom, currencyTo, amount){
 
 }
 
-function strategyAll(payAmount, fixedCommission, percentCommission, strategy, payerPart, userPart, rate, exchangeStrategy, exchangeFixRUB, exchangePercentRUB, exchangeFixVND, exchangePercentVND, exchangePayerPart, exchangeUserPart){
+function strategyAll(payAmount, fixedCommission, percentCommission, strategy, payerPart, userPart, rate, exchangeStrategy, exchangeFixRUB, exchangePercentRUB, exchangeFixKHR, exchangePercentKHR, exchangePayerPart, exchangeUserPart){
 
     let commissionsSum = (+fixedCommission + (+payAmount / 100 * +percentCommission));
     if (payerPart == 100){
@@ -88,7 +88,7 @@ function strategyAll(payAmount, fixedCommission, percentCommission, strategy, pa
         cy.log("userPart =" + " " + userPart);
         cy.log("rezult =" + " " + rezult);
 
-        let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixVND, exchangePercentVND);
+        let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixKHR, exchangePercentKHR);
         let resultAfterExchange = (+payAmount - +exchangeExternalResult) * rate;
         let exchangeInternalCurrent = exchangeInternal(resultAfterExchange, exchangeStrategy, exchangePayerPart, exchangeFixRUB, exchangePercentRUB);
         let resultFinal = (resultAfterExchange - exchangeInternalCurrent).toFixed(2);
@@ -111,7 +111,7 @@ function strategyAll(payAmount, fixedCommission, percentCommission, strategy, pa
         cy.log("userPart =" + " " + userPart);
         cy.log("rezult =" + " " + rezult);
 
-        let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixVND, exchangePercentVND);
+        let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixKHR, exchangePercentKHR);
         let resultAfterExchange = (+rezult - +exchangeExternalResult) * rate;
         let exchangeInternalCurrent = exchangeInternal(resultAfterExchange, exchangeStrategy, exchangePayerPart, exchangeFixRUB, exchangePercentRUB);
         let resultFinal = (resultAfterExchange - exchangeInternalCurrent).toFixed(2);
@@ -143,7 +143,7 @@ function strategyAll(payAmount, fixedCommission, percentCommission, strategy, pa
         cy.log("userPart =" + " " + userPart);
         cy.log("rezult =" + " " + rezult);
 
-        let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixVND, exchangePercentVND);
+        let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixKHR, exchangePercentKHR);
         let resultAfterExchange = (+rezult - +exchangeExternalResult) * rate;
         let exchangeInternalCurrent = exchangeInternal(resultAfterExchange, exchangeStrategy, exchangePayerPart, exchangeFixRUB, exchangePercentRUB);
         let resultFinal = (resultAfterExchange - exchangeInternalCurrent).toFixed(2);
@@ -156,7 +156,7 @@ function strategyAll(payAmount, fixedCommission, percentCommission, strategy, pa
     }
 }
 
-function strategyMax(payAmount, fixedCommission, percentCommission, strategy, payerPart, userPart, rate, exchangeStrategy, exchangeFixRUB, exchangePercentRUB, exchangeFixVND, exchangePercentVND, exchangePayerPart, exchangeUserPart){
+function strategyMax(payAmount, fixedCommission, percentCommission, strategy, payerPart, userPart, rate, exchangeStrategy, exchangeFixRUB, exchangePercentRUB, exchangeFixKHR, exchangePercentKHR, exchangePayerPart, exchangeUserPart){
     if (payerPart == 0) {
         if (fixedCommission > (+payAmount / 100 * +percentCommission)) {
             cy.wait(5000);
@@ -173,7 +173,7 @@ function strategyMax(payAmount, fixedCommission, percentCommission, strategy, pa
             cy.log("userPart =" + " " + userPart);
             cy.log("rezult =" + " " + rezult);
     
-            let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixVND, exchangePercentVND);
+            let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixKHR, exchangePercentKHR);
             let resultAfterExchange = (+rezult - +exchangeExternalResult) * rate;
             let exchangeInternalCurrent = exchangeInternal(resultAfterExchange, exchangeStrategy, exchangePayerPart, exchangeFixRUB, exchangePercentRUB);
             let resultFinal = (resultAfterExchange - exchangeInternalCurrent).toFixed(2);
@@ -201,7 +201,7 @@ function strategyMax(payAmount, fixedCommission, percentCommission, strategy, pa
             cy.log("userPart =" + " " + userPart);
             cy.log("rezult =" + " " + rezult);
     
-            let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixVND, exchangePercentVND);
+            let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixKHR, exchangePercentKHR);
             let resultAfterExchange = (+rezult - +exchangeExternalResult) * rate;
             let exchangeInternalCurrent = exchangeInternal(resultAfterExchange, exchangeStrategy, exchangePayerPart, exchangeFixRUB, exchangePercentRUB);
             let resultFinal = (resultAfterExchange - exchangeInternalCurrent).toFixed(2);
@@ -226,7 +226,7 @@ function strategyMax(payAmount, fixedCommission, percentCommission, strategy, pa
         cy.log("userPart =" + " " + userPart);
         cy.log("rezult =" + " " + rezult);
 
-        let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixVND, exchangePercentVND);
+        let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixKHR, exchangePercentKHR);
         let resultAfterExchange = (+payAmount - +exchangeExternalResult) * rate;
         let exchangeInternalCurrent = exchangeInternal(resultAfterExchange, exchangeStrategy, exchangePayerPart, exchangeFixRUB, exchangePercentRUB);
         let resultFinal = (resultAfterExchange - exchangeInternalCurrent).toFixed(2);
@@ -254,7 +254,7 @@ function strategyMax(payAmount, fixedCommission, percentCommission, strategy, pa
             cy.log("userPart =" + " " + userPart);
             cy.log("rezult =" + " " + rezult);
     
-            let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixVND, exchangePercentVND);
+            let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixKHR, exchangePercentKHR);
             let resultAfterExchange = (+rezult - +exchangeExternalResult) * rate;
             let exchangeInternalCurrent = exchangeInternal(resultAfterExchange, exchangeStrategy, exchangePayerPart, exchangeFixRUB, exchangePercentRUB);
             let resultFinal = (resultAfterExchange - exchangeInternalCurrent).toFixed(2);
@@ -282,7 +282,7 @@ function strategyMax(payAmount, fixedCommission, percentCommission, strategy, pa
             cy.log("userPart =" + " " + userPart);
             cy.log("rezult =" + " " + rezult);
     
-            let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixVND, exchangePercentVND);
+            let exchangeExternalResult = exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixKHR, exchangePercentKHR);
             let resultAfterExchange = (+rezult - +exchangeExternalResult) * rate;
             let exchangeInternalCurrent = exchangeInternal(resultAfterExchange, exchangeStrategy, exchangePayerPart, exchangeFixRUB, exchangePercentRUB);
             let resultFinal = (resultAfterExchange - exchangeInternalCurrent).toFixed(2);
@@ -296,7 +296,7 @@ function strategyMax(payAmount, fixedCommission, percentCommission, strategy, pa
 }
 }
 
-function exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixVND, exchangePercentVND){
+function exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchangeFixKHR, exchangePercentKHR){
     if(exchangeStrategy == 1){
         if (exchangePayerPart == 100) {
             cy.log("Стратегия exchange external - All, разбивка exchange 0/100")
@@ -307,13 +307,13 @@ function exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchan
         } else if (exchangePayerPart == 0){
             cy.log("Стратегия exchange external - All, разбивка exchange 100/0")
 
-            let exchangeExternalResult =  (+exchangeFixVND + (payAmount / 100 * exchangePercentVND)).toFixed(2);
+            let exchangeExternalResult =  (+exchangeFixKHR + (payAmount / 100 * exchangePercentKHR)).toFixed(2);
             return exchangeExternalResult;
 
         }else if (exchangePayerPart == 50){
             cy.log("Стратегия exchange external - All, разбивка exchange 50/50")
 
-            let exchangeExternalResult =  ((+exchangeFixVND + (payAmount / 100 * exchangePercentVND)) / 2).toFixed(2);
+            let exchangeExternalResult =  ((+exchangeFixKHR + (payAmount / 100 * exchangePercentKHR)) / 2).toFixed(2);
             return exchangeExternalResult;
         }
         
@@ -327,27 +327,27 @@ function exchangeExternal(payAmount, exchangeStrategy, exchangePayerPart, exchan
         } else if (exchangePayerPart == 0){
             cy.log("Стратегия exchange external - MAX, разбивка exchange 100/0")
 
-            if( +exchangeFixVND > (payAmount / 100 * exchangePercentVND)){
+            if( +exchangeFixKHR > (payAmount / 100 * exchangePercentKHR)){
 
-                let exchangeExternalResult =  +exchangeFixVND.toFixed(2);
+                let exchangeExternalResult =  +exchangeFixKHR.toFixed(2);
                 return exchangeExternalResult;
 
             }else{
 
-                let exchangeExternalResult =  (payAmount / 100 * exchangePercentVND).toFixed(2);
+                let exchangeExternalResult =  (payAmount / 100 * exchangePercentKHR).toFixed(2);
                 return exchangeExternalResult;
             }
         }else if (exchangePayerPart == 50){
             cy.log("Стратегия exchange external - MAX, разбивка exchange 50/50")
 
-            if( +exchangeFixVND > (payAmount / 100 * exchangePercentVND)){
+            if( +exchangeFixKHR > (payAmount / 100 * exchangePercentKHR)){
 
-                let exchangeExternalResult =  (+exchangeFixVND / 2).toFixed(2);
+                let exchangeExternalResult =  (+exchangeFixKHR / 2).toFixed(2);
                 return exchangeExternalResult;
 
             }else{
 
-                let exchangeExternalResult =  ((payAmount / 100 * exchangePercentVND) / 2).toFixed(2);
+                let exchangeExternalResult =  ((payAmount / 100 * exchangePercentKHR) / 2).toFixed(2);
                 return exchangeExternalResult;
 
             }
