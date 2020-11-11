@@ -85,20 +85,32 @@ class FeenPage {
         })
     }
 
-    acceptRefund(transactionId){
+    acceptRefund(){
         cy.request({
-            method: 'POST',
-            url: `https://app.stage.payop.com/v1/instrument-settings/user-payment-settings/payment-methods/${transactionId}/enable`,
+            method: 'GET',
+            url: `https://app.stage.payop.com/v1/refunds/user-refunds`,
             headers: {
-                token: feen.token,
-            },
-            body: {}
+                token: merchant.token,
+            }
         }).then((response) => {
-            expect(response).property('status').to.equal(201);
-            expect(response.body.status).eq(1);
+            expect(response).property('status').to.equal(200);
 
-        })
-    }
+            let refundId = response.body.data[0].identifier
+
+            cy.request({
+                method: 'POST',
+                url: `https://app.stage.payop.com/v1/refunds/${refundId}/accept`,
+                headers: {
+                    token: feen.token,
+                },
+                body: {}
+            }).then((response) => {
+                expect(response).property('status').to.equal(201);
+                expect(response.body.status).eq(1);
+
+            })
+        }
+    )}
 }
 
 export default new FeenPage();

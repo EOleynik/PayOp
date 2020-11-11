@@ -2,15 +2,15 @@
 class LoginPage {
 
     visit() {
-        cy.visit('/');
+        cy.visit('/ru');
     }
 
     getLoginButton() {
-        return cy.get('[class="blue-btn login-btn"]');
+        return cy.get('[class="blue-btn login-btn"]', {timeout: 20000});
     }
 
     getAcceptCookieButton() {
-        return cy.get('[class="cookie__accept-btn"]');
+        return cy.get('[class="cookie__accept-btn"]', {timeout: 20000});
     }
 
     getEmailField() {
@@ -26,14 +26,14 @@ class LoginPage {
     }
 
     setAuthorization() {
-        window.localStorage.setItem('user-session', '{"id":"45880","email":"dmitri.s+merchd@payop.com","token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjQ1ODgwIiwiYWNjZXNzVG9rZW4iOiJlY2Y5MmFjNWQ2N2QxMjQ4MjZmODJlODUiLCJ0aW1lIjoxNjAyNjk3NTU3LCJ3YWxsZXRJZCI6IjM4MDMyIiwicm9sZXMiOltdLCJ0d29GYWN0b3IiOnsicGFzc2VkIjp0cnVlfX0.iQnu8bPNpxY8fSazCVSkpXOyefdNpn86i9b6Cn0ty4w","role":1,"moduleUrl":"profile","status":1,"accountType":0,"isLoggedIn":true}');
+        window.localStorage.setItem('user-session', '{"id":"45880","email":"dmitri.s+merchd@payop.com","token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjQ1ODgwIiwiYWNjZXNzVG9rZW4iOiI5NTk3NjFjMTM5ZTY5MjdlYmFhYjdjZTgiLCJ0aW1lIjoxNjA0NzYwNjM1LCJ3YWxsZXRJZCI6IjM4MDMyIiwicm9sZXMiOltdLCJ0d29GYWN0b3IiOnsicGFzc2VkIjp0cnVlfX0.lsTZ33HQ9K9fRevyOuXQbb_9TSiRxeqZDZsFu4PVIkY","role":1,"moduleUrl":"profile","status":1,"accountType":0,"isLoggedIn":true}');
     }
     setLanguageToEng() {
         window.localStorage.setItem('selectedLang', 'en');
     }
 
     getToAdminPanelButton() {
-        return cy.get('[class="mat-focus-indicator mat-raised-button mat-button-base"]');
+        return cy.get('[class="mat-focus-indicator mat-raised-button mat-button-base"]', {timeout: 20000});
     }
 
     remove_captcha() {

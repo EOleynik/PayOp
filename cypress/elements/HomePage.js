@@ -4,19 +4,7 @@ import feen from "../fixtures/feen.json";
 class HomePage {
 
     visit() {
-        cy.visit('/');
-    }
-
-    checkUrl() {
-        return  cy.url().should('include','/ru/profile/overview');
-    }
-
-    getCheckUrlMan() {
-        return  cy.url().should('include', '/en/manager');
-    }
-
-    getCheckUrlFin() {
-        return  cy.url().should('include', '/en/financial');
+        cy.visit('/ru/profile');
     }
 
     getMenuVerification() {
@@ -24,7 +12,7 @@ class HomePage {
     }
 
     getMenuRefunds(){
-        return cy.contains('Возвраты');
+        return cy.contains('Возвраты', {timeout: 20000});
     }
 
     getChangeAccount() {
@@ -38,27 +26,27 @@ class HomePage {
 
 
     getMenuProjects() {
-        return cy.contains('Проекты');
+        return cy.contains('Проекты', {timeout: 20000});
     }
 
     getSubMenuRest() {
-        return cy.contains ('p', 'REST');
+        return cy.contains ('p', 'REST', {timeout: 20000});
     }
 
     getMenuPaymentHistory() {
-        return cy.contains('Транзакции');
+        return cy.contains('Транзакции', {timeout: 20000});
     }
 
     getMenuTransactions() {
-        return cy.contains('Transactions');
+        return cy.contains('Transactions', {timeout: 20000});
     }
 
     getMenuTickets() {
-        return cy.contains ('Tickets')
+        return cy.contains ('Tickets', {timeout: 20000})
     }
 
     getMenuCreateTransfer() {
-        return cy.contains ('Create Transfer');
+        return cy.contains ('Create Transfer', {timeout: 20000});
     }
 
 
