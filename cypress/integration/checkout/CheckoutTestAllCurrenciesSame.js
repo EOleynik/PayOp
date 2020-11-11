@@ -1,11 +1,11 @@
-import feenPage from "../elements/FeenPage";
-import loginPage from "../elements/LoginPage";
-import homePage from "../elements/HomePage";
-import restPage from "../elements/RestPage";
-import paymentPage from "../elements/PaymentPage";
-import card from "../fixtures/card";
-import paymentMethodPage from "../elements/PaymentMethodPage";
-import math from '../helpers/MathCheckoutAllCurrenciesSame.js';
+import feenPage from "../../elements/FeenPage";
+import loginPage from "../../elements/LoginPage";
+import homePage from "../../elements/HomePage";
+import restPage from "../../elements/RestPage";
+import paymentPage from "../../elements/PaymentPage";
+import card from "../../fixtures/card";
+import paymentMethodPage from "../../elements/PaymentMethodPage";
+import math from '../../helpers/MathCheckoutAllCurrenciesSame.js';
 
 cy.getRandomArbitrary = function getRandomArbitrary(min, max) {
     return (Math.random() * (max - min) + min).toFixed(2);
@@ -21,25 +21,37 @@ function setStartupSettings(payCurrency, checkoutStrategy, exchangeStrategy, pay
 }
 
 function fillTransactionData(payAmount, payCurrency) {
-    restPage.getInputOrderID().type('sanitarskiy123');
-    restPage.getInputOrderAmount().type(payAmount);
-    restPage.getInputOrderCurrency().type(payCurrency);
-    restPage.getInputOrderDescription().type('test description');
-    restPage.getInputResultUrl().type('https://app.stage.payop.com/');
-    restPage.getInputFailUrl().type('https://app.stage.payop.com/');
-    restPage.getButtonGenerateConfig().click();
-    restPage.getButtonShowPaymentPage().click();
+    restPage.getInputOrderID().type('sanitarskiy123',{force: true});
+    restPage.getInputOrderAmount().type(payAmount,{force: true});
+    restPage.getInputOrderCurrency().type(payCurrency,{force: true});
+    restPage.getInputOrderDescription().type('test description',{force: true});
+    restPage.getInputResultUrl().type('https://app.stage.payop.com/',{force: true});
+    restPage.getInputFailUrl().type('https://app.stage.payop.com/',{force: true});
+    restPage.getButtonGenerateConfig().click({force: true});
+    restPage.getButtonShowPaymentPage().click({force: true});
 }
 
 function fillCheckoutDataAndPay() {
-    paymentPage.getPaymentMethod().click();
-    paymentPage.getSubmitPaymentButton().click();
-    paymentPage.getInputCardNumber().type(card.card_number);
-    paymentPage.getInputExpirationDate().type(card.expiration_date);
-    paymentPage.getInputCVC().type(card.CVC);
-    paymentPage.getInputCardholderName().type(card.cardholder);
-    paymentPage.getButtonPay().click();
+    cy.server();
+
+    cy.route({
+        method: 'POST',
+        url: `/v1/checkout/create`,
+    }).as('transactionComplete');
+
+    paymentPage.getPaymentMethod().click({force: true});
+    cy.wait(3000)
+    paymentPage.getSubmitPaymentButton().click({force: true});
+    window.localStorage.getItem('checkoutData')
+    paymentPage.getInputCardNumber().type(card.card_number, {force: true});
+    paymentPage.getInputExpirationDate().type(card.expiration_date, {force: true});
+    paymentPage.getInputCVC().type(card.CVC, {force: true});
+    paymentPage.getInputCardholderName().type(card.cardholder, {force: true});
+    paymentPage.getButtonPay().click({force: true});
     cy.wait(6000);
+
+    cy.wait('@transactionComplete');
+
 }
 
 function checkTransactionMath(payAmount) {
@@ -47,10 +59,11 @@ function checkTransactionMath(payAmount) {
     loginPage.getLoginButton().click();
     loginPage.getToAdminPanelButton().click();
     homePage.getMenuPaymentHistory().click();
+    cy.wait(3000)
     math.checkStrategyMathRUB(payAmount);
 }
 
-describe('All currencies are same.', () => {
+describe('Checkout all currencies are same.', () => {
 
     beforeEach('', () => {
         loginPage.visit();

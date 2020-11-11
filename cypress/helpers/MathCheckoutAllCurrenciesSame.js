@@ -22,12 +22,10 @@ class MathCheckout {
                 let payerPart = response.body.data[7].payerPart;
                 let userPart = response.body.data[7].userPart;
 
-                cy.wait(5000);
-
                 //TODO: change locator and status when it will be fixed on staging.
-                cy.get(':nth-child(1) > .cdk-column-state > .mat-chip').invoke('text').should((text) => {
-                    expect(text).to.eq(' Неудачный ')
-                });
+                // cy.get(':nth-child(1) > .cdk-column-state > .mat-chip', {timeout: 20000}).invoke('text').should((text) => {
+                //     expect(text.replace(/\s/g, '')).to.eq('Принят')
+                // });
 
                 cy.log("Strategy "+strategy)
 
